@@ -10,15 +10,16 @@
    [datomic.client.api :as d]
    [datomic.ion.lambda.api-gateway :as apigw]))
 
+
 (def get-client
   "This function will return a local implementation of the client
 interface when run on a Datomic compute node. If you want to call
 locally, fill in the correct values in the map."
   (memoize #(d/client {:server-type :ion
-                       :region "us-east-1"
-                       :system "stu-8"
-                       :query-group "stu-8"
-                       :endpoint "http://entry.stu-8.us-east-1.datomic.net:8182/"
+                       :region      "eu-central-1" ;; e.g. us-east-1
+                       :system      "datomic"
+                       :query-group "datomic"
+                       :endpoint    "http://entry.datomic.eu-central-1.datomic.net:8182/"
                        :proxy-port 8182})))
 
 (defn- anom-map
