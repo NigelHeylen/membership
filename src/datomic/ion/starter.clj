@@ -17,9 +17,8 @@ interface when run on a Datomic compute node. If you want to call
 locally, fill in the correct values in the map."
   (memoize #(d/client {:server-type :ion
                        :region      "eu-central-1" ;; e.g. us-east-1
-                       :system      "datomic"
-                       :query-group "datomic"
-                       :endpoint    "http://entry.datomic.eu-central-1.datomic.net:8182/"
+                       :system      "datomic-test"
+                       :endpoint    "http://entry.datomic-test.eu-central-1.datomic.net:8182/"
                        :proxy-port 8182})))
 
 (defn- anom-map
