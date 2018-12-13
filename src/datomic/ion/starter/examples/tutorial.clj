@@ -11,6 +11,11 @@
   (mapv #(hash-map :db/ident %) x))
 
 
+(def object-schema
+  [{:db/ident :object/id
+    :db/valueType :db.type/uuid
+    :db/cardinality :db.cardinality/one}])
+
 (def member-schema
   [{:db/ident :person/first-name
     :db/valueType :db.type/string
@@ -79,6 +84,8 @@
       :already-loaded
       (let [xact #(d/transact conn {:tx-data %})]
         (xact (make-idents membership-type))
+        (xact (make-idents training-type))
+        (xact object-schema)
         (xact member-schema)
         (xact membership-schema)
         (xact training-schema)

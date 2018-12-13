@@ -10,4 +10,6 @@
 (def tx-data [(starter/start-training* db :training.type/gi (java.util.UUID/randomUUID))])
 
 
-(d/transact conn {:tx-data tx-data})
+(comment
+  (starter/start-training {:input "\"training.type/gi\""})
+  (d/transact conn {:tx-data tx-data}))
