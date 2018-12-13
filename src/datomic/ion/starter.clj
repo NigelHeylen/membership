@@ -157,23 +157,6 @@ against a connection. Returns connection"
         _ (d/transact conn {:tx-data tx})]
     training-id))
 
-(defn create-item
-  "Transaction fn that creates data to make a new item"
-  [db sku size color type]
-  [{:inv/sku sku
-    :inv/color (keyword color)
-    :inv/size (keyword size)
-    :inv/type (keyword type)}])
-
-(defn add-item
-  "Lambda ion that adds an item, returns database t."
-  [{:keys [input]}]
-  (let [args (-> input json/read-str)
-        conn (get-connection)
-        tx [(list* 'datomic.ion.starter/create-item args)]
-        result (d/transact conn {:tx-data tx})]
-    (pp-str {:t (-> result :db-after :t)})))
-
 (defn feature-item?
   "Query ion exmaple. This predicate matches entities that
 should be featured in a promotion."
