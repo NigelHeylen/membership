@@ -7,9 +7,7 @@
 
 (def db (d/db conn))
 
-(def tx-data [(starter/start-training* db :training.type/gi)])
+(def tx-data [(starter/start-training* db :training.type/gi (java.util.UUID/randomUUID))])
 
-[(list* 'datomic.ion.starter/start-training* [:training.type/gi :t])]
 
-(first tx-data)
 (d/transact conn {:tx-data tx-data})

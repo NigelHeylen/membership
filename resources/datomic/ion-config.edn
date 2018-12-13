@@ -1,13 +1,16 @@
 {:allow [;; transaction functions
          datomic.ion.starter/create-item
 
+         datomic.ion.starter/start-training*
+
          ;; query functions
          datomic.ion.starter/feature-item?
 
          ;; lambda handlers
          datomic.ion.starter/echo
-         datomic.ion.starter/add-item
          datomic.ion.starter/items-by-type
+
+         datomic.ion.starter/start-training
 
          ;; web applications
          datomic.ion.starter/items-by-type-web
