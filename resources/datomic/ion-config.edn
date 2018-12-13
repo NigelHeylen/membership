@@ -28,7 +28,8 @@
            :start-training
            {:fn datomic.ion.starter/start-training
             :description "starts training, using a tx fn"}
-           {:fn datomic.ion.starter/items-by-type-web
+           :start-training-web
+           {:fn datomic.ion.starter/start-training-web
             :integration :api-gateway/proxy
             :description "web app that starts a training and returns transit"}}
  :app-name "datomic-test"}
