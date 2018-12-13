@@ -11,5 +11,4 @@
 
 
 (comment
-  (starter/start-training {:input "\"training.type/gi\""})
-  (d/transact conn {:tx-data tx-data}))
+  (starter/start-training {:input "\"training.type/gi\""}))

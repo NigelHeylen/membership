@@ -155,7 +155,7 @@ against a connection. Returns connection"
         training-id (java.util.UUID/randomUUID)
         tx [(list* 'datomic.ion.starter/start-training* [args training-id])]
         _ (d/transact conn {:tx-data tx})]
-    training-id))
+    (str training-id)))
 
 (defn feature-item?
   "Query ion exmaple. This predicate matches entities that
