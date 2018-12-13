@@ -111,46 +111,10 @@ against a connection. Returns connection"
   [{:keys [context input]}]
   input)
 
-(defn items-by-type*
-  "Returns info about items matching type"
-  [db type]
-  (d/q '[:find ?sku ?size ?color
-         :in $ ?type
-         :where
-         [?e :inv/type ?type]
-         [?e :inv/sku ?sku]
-         [?e :inv/size ?size]
-         [?e :inv/color ?color]
-         #_[(datomic.ion.starter/feature-item? $ ?e) ?featured]]
-       db type))
-
-(defn items-by-type
-  "Lambda ion that returns sample database items matching type."
-  [{:keys [input]}]
-  (-> (items-by-type* (d/db (get-connection))
-                      (-> input json/read-str keyword))
-      pp-str))
-
 (defn read-edn
   [input-stream]
   (some-> input-stream io/reader (java.io.PushbackReader.) edn/read))
 
-(defn items-by-type-web*
-  "Lambda ion that returns sample database items matching type."
-  [{:keys [headers body]}]
-  (let [type (some-> body read-edn)]
-    (if (keyword? type)
-      {:status 200
-       :headers {"Content-Type" "application/edn"} 
-       :body (-> (items-by-type* (d/db (get-connection)) type)
-                 pp-str)}
-      {:status 400
-       :headers {}
-       :body "Expected a request body keyword naming a type"})))
-
-(def items-by-type-web
-  "API Gateway web service ion for items-by-type"
-  (apigw/ionize items-by-type-web*))
 
 
 (defn start-training*
@@ -163,7 +127,8 @@ against a connection. Returns connection"
 (defn start-training
   "Lambda ion that starts a training, returns a training-id."
   [{:keys [input]}]
-  (let [args (-> input json/read-str keyword)
+  (let [args (if (keyword? type) type
+                                 (-> input json/read-str keyword))
         conn (get-connection)
         training-id (java.util.UUID/randomUUID)
         tx [(list* 'datomic.ion.starter/start-training* [args training-id])]
@@ -182,3 +147,19 @@ should be featured in a promotion."
          (= (:db/ident size) :xlarge)
          (= (:db/ident type) :hat))))
 
+
+(defn start-training-web*
+  "Lambda ion that returns sample database items matching type."
+  [{:keys [headers body]}]
+  (let [type (some-> body read-edn)]
+    (if (keyword? type)
+      {:status 200
+       :headers {"Content-Type" "application/edn"}
+       :body (start-training {:input type})}
+      {:status 400
+       :headers {}
+       :body "Expected a request body keyword naming a type"})))
+
+(def start-training-web
+  "API Gateway web service ion for start-training"
+  (apigw/ionize start-training-web*))
