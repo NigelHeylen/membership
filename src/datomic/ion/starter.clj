@@ -127,7 +127,7 @@ against a connection. Returns connection"
 (defn start-training
   "Lambda ion that starts a training, returns a training-id."
   [{:keys [input]}]
-  (let [args (if (keyword? type) type
+  (let [args (if (keyword? input) input
                                  (-> input json/read-str keyword))
         conn (get-connection)
         training-id (java.util.UUID/randomUUID)
