@@ -23,6 +23,8 @@
            :add-item
            {:fn datomic.ion.starter/add-item
             :description "adds an inventory item, using a tx fn"}
+           {:fn datomic.ion.starter/start-training
+            :description "starts training, using a tx fn"}
            :items-by-type
            {:fn datomic.ion.starter/items-by-type
             :description "returns info about items with a particular type"}

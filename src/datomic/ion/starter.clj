@@ -68,7 +68,7 @@ against a connection. Returns connection"
 
 (defn get-connection
   []
-  (ensure-dataset "datomic-docs-tutorial"
+  (ensure-dataset "datomic-membership-13-12-2018"
                   'datomic.ion.starter.examples.tutorial/load-dataset))
 
 (defn schema
@@ -78,6 +78,7 @@ against a connection. Returns connection"
        :db.install/attribute
        (map #(update % :db/valueType :db/ident))
        (map #(update % :db/cardinality :db/ident))))
+
 
 ;; Ions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -137,6 +138,24 @@ against a connection. Returns connection"
 (def items-by-type-web
   "API Gateway web service ion for items-by-type"
   (apigw/ionize items-by-type-web*))
+
+
+(defn start-training*
+  "Transaction fn that creates data to make a new item"
+  [db type id]
+  [{:object/id id
+    :training/start (java.util.Date.)
+    :training/type (keyword type)}])
+
+(defn start-training
+  "Lambda ion that starts a training, returns a training-id."
+  [{:keys [input]}]
+  (let [args (-> input json/read-str keyword)
+        conn (get-connection)
+        training-id (java.util.UUID/randomUUID)
+        tx [(list* 'datomic.ion.starter/start-training* [args training-id])]
+        _ (d/transact conn {:tx-data tx})]
+    training-id))
 
 (defn create-item
   "Transaction fn that creates data to make a new item"

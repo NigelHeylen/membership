@@ -7,7 +7,8 @@
         org.clojure/clojure {:mvn/version "1.9.0"}}
  :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
  :aliases
- {:dev {:extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
+ {:dev {:extra-paths ["dev" "sessions"]
+        :extra-deps {com.datomic/client-cloud {:mvn/version "0.8.71"}
                      com.datomic/ion-dev {:mvn/version "0.9.176"}
                      com.amazonaws/aws-java-sdk-sts {:mvn/version "1.11.210"}}}}}
 
