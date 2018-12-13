@@ -3,13 +3,26 @@
 
 (ns datomic.ion.starter
   (:require
-   [clojure.data.json :as json]
-   [clojure.edn :as edn]
-   [clojure.java.io :as io]
-   [clojure.pprint :as pp]
-   [datomic.client.api :as d]
-   [datomic.ion.lambda.api-gateway :as apigw]))
+    [clojure.data.json :as json]
+    [clojure.edn :as edn]
+    [clojure.java.io :as io]
+    [clojure.pprint :as pp]
+    [datomic.client.api :as d]
+    [datomic.ion.lambda.api-gateway :as apigw]
+    [cognitect.transit :as transit])
+  (:import (java.io ByteArrayOutputStream ByteArrayInputStream)))
 
+
+(defn write-transit [x]
+  (let [out (ByteArrayOutputStream. 4096)
+        writer (transit/writer out :json)]
+    (transit/write writer x)
+    (.toString out)))
+
+(defn read-transit [x]
+  (let [in (ByteArrayInputStream. (.getBytes x))
+        reader (transit/reader in :json)]
+    (transit/read reader)))
 
 (def get-client
   "This function will return a local implementation of the client
@@ -155,7 +168,7 @@ against a connection. Returns connection"
         training-id (java.util.UUID/randomUUID)
         tx [(list* 'datomic.ion.starter/start-training* [args training-id])]
         _ (d/transact conn {:tx-data tx})]
-    (str training-id)))
+    (write-transit {:id training-id})))
 
 (defn feature-item?
   "Query ion exmaple. This predicate matches entities that
